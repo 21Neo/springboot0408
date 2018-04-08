@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" xmlns:th="http://www.thymeleaf.org">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link type="image/x-icon" rel="shortcut icon" th:href="@{/images/favicon.ico}"/>
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Thymeleaf:Spring Boot 自带的前端模板</h1>
+        <img th:src="@{/images/favicon.ico}" alt="node.js">
+    </div>
+
+    <!--标签的常用方法-->
+    <h1>标签常用方法</h1>
+    <h3>赋值+字符串拼接</h3>
+    <p th:text="${car.name}">车名</p>
+    <span th:text="'车的传奇:'+${car.name}"></span>
+
+    <h5>字符串拼接简洁的写法</h5>
+    <span th:text="|车的传奇:${car.name}!|"></span>
+
+    <h3>条件判断</h3>
+    <span th:if="${car.price == 600}">600恰好: if 满足条件</span>
+    <span th:unless="${car.price == 500}">600太贵 unless 条件为假输出</span>
+    <span th:unless="${car.price == 500}">600太贵 unless 条件为真不输出</span>
+
+    <h3>循环</h3>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>车名</th>
+                <th>价格</th>
+                <th>生产日期</th>
+            </tr>
+            </thead>
+        <tbody>
+            <tr th:each="car:${cars}">
+                <td th:text="${car.id}">id</td>
+                <td th:text="${car.name}">车名</td>
+                <td th:text="${#numbers.formatDecimal(car.price,1,2)}">价格</td>
+                <td th:text="${#dates.format(car.createDate,'yyyy-MM-dd')}">生产日期</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>标准表达式语法</h3>
+    <h3>变量表达式</h3>
+    <span>变量表达式即OGNL（对象导航语言）或Spring EL表达式（模型数据）</span>
+    <!--session 作用域 request 作用域-->
+    <p th:text="|session:${session.car.name} request:${car.name}|"></p>
+    <tr th:each="car : ${cars}">
+        <td th:text="${car.name}"></td>
+    </tr>
+
+    <h3>选择(星号)表达式</h3>
+    <h4>总结：* 表达式作用和 $ 类似，<hr>区别是：$可用于th:object * 可以直接*{属性名}</h4>
+    <span th:text="*{car.name}"></span>
+    <div th:object="${car}">
+        <span th:text="*{price}"></span>
+    </div>
+
+    <h3>URL 表达式</h3>
+    <a href="/hellospringboot">原生:</a><br>
+    <a href="/hellospringboot?name=jack">原生带参:</a><br>
+    <a href="/hellospringboot?name=jack&price=120">原生多参:</a><br>
+    <a th:href="@{/hellospringboot}">Hello URL</a><br>
+    <a th:href="@{/hellospringboot(name=${car.name},price=${car.price})}">
+        Hello hellospringboot<br>
+    </a>
+
+    <h1>布局</h1>
+    <!--被包含的文件名; copy是被包含文件中的fragment碎片的名字-->
+    <div th:include="foot :: copy"></div>
+    <div th:include="foot :: copy"></div>
+</body>
+</html>
